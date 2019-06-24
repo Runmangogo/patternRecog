@@ -1,6 +1,7 @@
 import WebCrawler as wcr
 import DataFactory as dfy
 import RecognitionEngine as rce
+import merge2Excel as exl
 import time
 
 ###day interval with 1 year range
@@ -18,7 +19,10 @@ wc = wcr.WebCrawler()
 ##get the list of symbols from wikipedia, we will implement this function later;
 ##symbollist_html = wc.url_open(symbollist_url)
 
-indiceslist = ['S&P500', 'RussellMidCap', 'Russell2000']
+# debug by some specific symbol:
+indiceslist = ['S&P500']
+
+#indiceslist = ['S&P500', 'RussellMidCap', 'Russell2000']
 
 ##read the list of symbol from local file:
 for eachindex in indiceslist:
@@ -39,10 +43,23 @@ for eachindex in indiceslist:
 
         time.sleep(2)
 
+print('done with patter recognition jobs, start merging today data into excel')
+
+mergexl = exl.merge2Excel()
+
+merg_indiceslist = ['S&P500']
+# merg_indiceslist = ['S&P500', 'RussellMidCap', 'Russell2000']
+
+listtype = ['_HighAlert']
+# listtype = ['_HighAlert', '_WatchList']
+
+for each in merg_indiceslist:
+    for lt in listtype:
+        mergexl.merge2ExcelWorker(each, lt)
+
 print('all done!!!')
 
-# todo: 1. handle issue that some prices in early days are null-- delete the nulls and check the new length of it and...
-#       2. iterate on different indices (diferent files) : s&p500, russell mid cap, russell 2000
+# todo:
 
 
 #for debug
@@ -50,7 +67,7 @@ print('all done!!!')
 #symboldata_url = 'https://query1.finance.yahoo.com/v8/finance/chart/UVXY?region=US&lang=en-US&includePrePost=false&interval=1d&range=1y&corsDomain=finance.yahoo.com&.tsrc=finance'
 
 each = 'bf-b'
-symboldata_url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + each + '?region=US&lang=en-US&includePrePost=false&interval=1d&range=1y&corsDomain=finance.yahoo.com&.tsrc=finance'
+symboldata_url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + each + '?region=US&lang=en-US&includePrePost=false&interval=1d&range=2y&corsDomain=finance.yahoo.com&.tsrc=finance'
 
 df = dfy.DataFactory()
 df.json_digest(wc.url_open(symboldata_url))

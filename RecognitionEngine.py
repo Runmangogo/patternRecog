@@ -12,8 +12,18 @@ class RecognitionEngine:
         length = open_price.__len__()
         endidx = length - 1
         todayhigh = high_price[-1]
-        wl = symbol + ' '
-        ha = symbol + ' '
+        wl = symbol + '|'
+        ha = symbol + '|'
+
+        # if there is element with 'null' value in lists, we need to remove it from them.
+        if open_price.count(None) > 0:
+            print('found None value in the open_price')
+            wl = wl + '*'
+            ha = ha + '*'
+            open_price = list(filter(lambda x: x is not None, open_price))
+            close_price = list(filter(lambda x: x is not None, close_price))
+            high_price = list(filter(lambda x: x is not None, high_price))
+            low_price = list(filter(lambda x: x is not None, low_price))
 
         # put this info in the dict with key is startind and value is timerange
         startidx = {}
@@ -37,50 +47,41 @@ class RecognitionEngine:
         # 12 months
         startidx[0] = '24m'
 
-        # if there is element with 'null' value in lists, we need to remove it from them.
-        if open_price.count(None) > 0:
-            print('found None value in the open_price')
-            wl = wl + '*'
-            ha = ha + '*'
-            open_price = list(filter(lambda x: x is not None, open_price))
-            close_price = list(filter(lambda x: x is not None, close_price))
-            high_price = list(filter(lambda x: x is not None, high_price))
-            low_price = list(filter(lambda x: x is not None, low_price))
-
-
         for eachKey in startidx.keys():
 
-            try:
-                # (endidx-1), we should exclude the current day, so we can work out alert list.
-                open_pricet = open_price[eachKey:(endidx-1)]
-                close_pricet = close_price[eachKey:(endidx-1)]
-                high_pricet = high_price[eachKey:(endidx-1)]
-                low_pricet = low_price[eachKey:(endidx-1)]
-                period = startidx[eachKey]
+            # do this check, to make sure there is no minus value for start index
+            if eachKey >= 0:
+                try:
+                    # (endidx-1), we should exclude the current day, so we can work out alert list.
+                    open_pricet = open_price[eachKey:(endidx-1)]
+                    close_pricet = close_price[eachKey:(endidx-1)]
+                    high_pricet = high_price[eachKey:(endidx-1)]
+                    low_pricet = low_price[eachKey:(endidx-1)]
+                    period = startidx[eachKey]
 
-                in_list = self.priceTunnelChecker(open_pricet, close_pricet, high_pricet, low_pricet, todayhigh)
+                    in_list = self.priceTunnelChecker(open_pricet, close_pricet, high_pricet, low_pricet, todayhigh)
 
-                if in_list == 1:
-                    ha = ha + '--' + period
-                if in_list == 2:
-                    wl = wl + '--' + period
-                if in_list == 3:
-                    ha = ha + '--' + period
-                    wl = wl + '--' + period
-            except Exception as e:
-                print('timespansChecker: error in ' + startidx[eachKey] + '\n')
-                print(e)
+                    if in_list == 1:
+                        ha = ha + '_' + period
+                    if in_list == 2:
+                        wl = wl + '_' + period
+                    if in_list == 3:
+                        ha = ha + '_' + period
+                        wl = wl + '_' + period
+                except Exception as e:
+                    print('timespansChecker: error in ' + startidx[eachKey] + '\n')
+                    print(e)
 
 
         try:
 
             if ha.__len__() > symbol.__len__() + 2:
-                f_ha = open('C:\\MyProjects\\output\\' + index + '_HighAlert_' + dt.date.today().isoformat() + '.txt', 'a')
+                f_ha = open('C:\\MyProjects\\output\\' + dt.date.today().isoformat() + '_' + index + '_HighAlert' + '.txt', 'a')
                 f_ha.write(ha+'\n')
                 f_ha.close()
 
             if wl.__len__() > symbol.__len__() + 2:
-                f_wl = open('C:\\MyProjects\\output\\' + index + '_WatchList_' + dt.date.today().isoformat() + '.txt', 'a')
+                f_wl = open('C:\\MyProjects\\output\\' + dt.date.today().isoformat() + '_' + index + '_WatchList' + '.txt', 'a')
                 f_wl.write(wl+'\n')
                 f_wl.close()
         except Exception as e:
