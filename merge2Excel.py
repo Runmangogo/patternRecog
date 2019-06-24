@@ -69,7 +69,7 @@ class merge2Excel:
             self.today_exl[list_temp[0].upper()] = list_temp[1:]
 
         # debug
-        print('today_exl(before merge):' + str(self.today_exl))
+        # print('today_exl(before merge):' + str(self.today_exl))
 
     # read txt file into cache:
     def read_txt(self, list_path):
@@ -83,7 +83,7 @@ class merge2Excel:
             self.today_data[each[:each.find('|')]] = each[each.find('|') + 1:].replace('\n', '')
 
         # debug:
-        print('today_data(from txt):' + str(self.today_data))
+        # print('today_data(from txt):' + str(self.today_data))
 
     # compare two sets of data, and merge and re_sort them
     def dataMassage(self):
@@ -100,8 +100,11 @@ class merge2Excel:
                 # add None columns to today_data[each], to fit the number of columns
                 if self.prior_columns == 12:
                     fill_None = self.prior_columns - 2
-                if self.prior_columns > 0 and self.prior_columns < 12:
+                elif self.prior_columns > 0 and self.prior_columns < 12:
                     fill_None = self.prior_columns - 1
+                elif  self.prior_columns == 0:
+                    fill_None = 1
+
 
                 self.today_exl[each] = []
                 for each_None in range(fill_None):
@@ -111,7 +114,7 @@ class merge2Excel:
             self.today_exl[each].append(self.today_data[each])
 
         # debug
-        print('today_exl(after merge):' + str(self.today_exl))
+        # print('today_exl(after merge):' + str(self.today_exl))
 
 
     def write_excel_xlsx(self, sheet_name, excel_path):
@@ -126,8 +129,10 @@ class merge2Excel:
         # write the title row:
         if self.prior_columns == 12:
             iter_number = self.prior_columns - 2
-        if self.prior_columns > 0 and self.prior_columns < 12:
+        elif self.prior_columns > 0 and self.prior_columns < 12:
             iter_number = self.prior_columns - 1
+        elif self.prior_columns == 0:
+            iter_number = 1
 
         for i in range(iter_number):
             titles.append(i+1)
