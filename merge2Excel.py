@@ -15,8 +15,11 @@ class merge2Excel:
         # list_type = '_HighAlert'
         root_path = 'C:\\MyProjects\\output\\'
         list_path = root_path + dt.date.today().isoformat() + '_' + index + list_type + '.txt'
-        excel_path = root_path + dt.date.today().isoformat() + '_' + index + list_type +  '.xlsx'
-        prior_excel_path = root_path + (dt.date.today()-dt.timedelta(days=1)).isoformat() + '_' + index + list_type +  '.xlsx'
+        #excel_path = root_path + dt.date.today().isoformat() + '_' + index + list_type +  '.xlsx'
+        #prior_excel_path = root_path + (dt.date.today()-dt.timedelta(days=1)).isoformat() + '_' + index + list_type +  '.xlsx'
+        excel_path = root_path + dt.date.today().isoformat() + list_type + '.xlsx'
+        prior_excel_path = root_path + (dt.date.today()-dt.timedelta(days=1)).isoformat() + list_type +  '.xlsx'
+
 
         sheet_name = index + list_type
 
@@ -119,9 +122,14 @@ class merge2Excel:
 
     def write_excel_xlsx(self, sheet_name, excel_path):
         #index = len(value)
-        workbook = xl.Workbook()
-        sheet = workbook.active
-        sheet.title = sheet_name
+
+        # if there is excel, add a new sheet to it, if not, create a new excel:
+        if os.path.isfile(excel_path):
+            workbook = xl.load_workbook(excel_path)
+        else:
+            workbook = xl.Workbook()
+
+        sheet = workbook.create_sheet(sheet_name)
 
         titles = ['symbol', 'note']
         iter_number = 0
@@ -163,4 +171,4 @@ class merge2Excel:
 
 if __name__ == '__main__':
     mer = merge2Excel()
-    mer.merge2ExcelWorker('RussellMidCap', '_HighAlert')
+    mer.merge2ExcelWorker('Russell2000', '_HighAlert')

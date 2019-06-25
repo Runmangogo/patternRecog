@@ -173,6 +173,17 @@ class RecognitionEngine:
 
                     min_landmarks_distance = dayrange_bias * date_range
 
+                    ####### filter some U patterns --- dont want to waste time on this for now.
+                    # use for each to go through all highs and see if there is one fall in to 1/4 - 3/4 of timespan:
+                    upattern = 1
+                    for each in highest_ind:
+                        if each >= 1/4 * date_range and each <= 3/4 * date_range:
+                            upattern = 0
+                            break
+
+                    if upattern == 1:
+                        return in_list
+
                     # check high side: determine how many "valid" high_points in highest_ind
                     landmark = -min_landmarks_distance
 
