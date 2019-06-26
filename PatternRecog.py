@@ -19,9 +19,9 @@ wc = wcr.WebCrawler()
 ##symbollist_html = wc.url_open(symbollist_url)
 
 # debug by some specific symbol:
-indiceslist = ['S&P500']
+#indiceslist = ['S&P500']
 
-#indiceslist = ['S&P500', 'RussellMidCap', 'Russell2000']
+indiceslist = ['S&P500', 'RussellMidCap', 'Russell2000']
 
 ##read the list of symbol from local file:
 for eachindex in indiceslist:
@@ -58,7 +58,8 @@ for each in merg_indiceslist:
 
 print('all done!!!')
 
-# todo: add today volumn and today price to lists
+# todo: bug : if prior excel day columns are 10, program will delete the day 1,
+#       HOWEVER, it will still keep the old symbol which was ONLY on the list of day 1. I need to get around with it.
 # todo: delete the old files in output folder?
 # todo: make the number of days in excel file configurable, current is 10 days.
 # todo: ip addrs proxy?

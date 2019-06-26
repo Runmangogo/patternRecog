@@ -12,8 +12,8 @@ class RecognitionEngine:
         length = open_price.__len__()
         endidx = length - 1
         todayhigh = high_price[-1]
-        wl = symbol + '|' + '%.2f' % close_price[-1] + '_' + str('%.1f' % (todayvolume/1000000)) + 'M'
-        ha = symbol + '|' + '%.2f' % close_price[-1] + '_' + str('%.1f' % (todayvolume/1000000)) + 'M'
+        wl = symbol + '|' + '%.2f' % close_price[-1] + '<' + str('%.1f' % (todayvolume/1000000)) + 'M>'
+        ha = symbol + '|' + '%.2f' % close_price[-1] + '<' + str('%.1f' % (todayvolume/1000000)) + 'M>'
 
         # if there is element with 'null' value in lists, we need to remove it from them.
         if open_price.count(None) > 0:
