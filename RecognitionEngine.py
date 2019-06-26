@@ -7,13 +7,13 @@ class RecognitionEngine:
         pass
 
     # go over different time span
-    def timespansChecker(self, index, symbol, open_price, close_price, high_price, low_price):
+    def timespansChecker(self, index, symbol, open_price, close_price, high_price, low_price, todayvolume):
 
         length = open_price.__len__()
         endidx = length - 1
         todayhigh = high_price[-1]
-        wl = symbol + '|'
-        ha = symbol + '|'
+        wl = symbol + '|' + '%.2f' % close_price[-1] + '_' + str('%.1f' % (todayvolume/1000000)) + 'M'
+        ha = symbol + '|' + '%.2f' % close_price[-1] + '_' + str('%.1f' % (todayvolume/1000000)) + 'M'
 
         # if there is element with 'null' value in lists, we need to remove it from them.
         if open_price.count(None) > 0:
@@ -25,27 +25,30 @@ class RecognitionEngine:
             high_price = list(filter(lambda x: x is not None, high_price))
             low_price = list(filter(lambda x: x is not None, low_price))
 
+        wl_empty_len = wl.__len__()
+        ha_empty_len = ha.__len__()
+
         # put this info in the dict with key is startind and value is timerange
         startidx = {}
         # 365 - 10 holidays : avg 21 weekdays per month
         # 4 months
-        startidx[endidx - 83] = '4m'
+        startidx[endidx - 83] = '4'
         # 5 months
-        startidx[endidx - 104] = '5m'
-        startidx[endidx - 125] = '6m'
-        startidx[endidx - 146] = '7m'
-        startidx[endidx - 167] = '8m'
-        startidx[endidx - 188] = '9m'
-        startidx[endidx - 209] = '10m'
-        startidx[endidx - 230] = '11m'
-        startidx[endidx - 250] = '12m'
-        startidx[endidx - 292] = '14m'
-        startidx[endidx - 334] = '16m'
-        startidx[endidx - 375] = '18m'
-        startidx[endidx - 417] = '20m'
-        startidx[endidx - 459] = '22m'
+        startidx[endidx - 104] = '5'
+        startidx[endidx - 125] = '6'
+        startidx[endidx - 146] = '7'
+        startidx[endidx - 167] = '8'
+        startidx[endidx - 188] = '9'
+        startidx[endidx - 209] = '10'
+        startidx[endidx - 230] = '11'
+        startidx[endidx - 250] = '12'
+        startidx[endidx - 292] = '14'
+        startidx[endidx - 334] = '16'
+        startidx[endidx - 375] = '18'
+        startidx[endidx - 417] = '20'
+        startidx[endidx - 459] = '22'
         # 12 months
-        startidx[0] = '24m'
+        startidx[0] = '24'
 
         for eachKey in startidx.keys():
 
@@ -75,12 +78,12 @@ class RecognitionEngine:
 
         try:
 
-            if ha.__len__() > symbol.__len__() + 2:
+            if ha.__len__() > ha_empty_len:
                 f_ha = open('C:\\MyProjects\\output\\' + dt.date.today().isoformat() + '_' + index + '_HighAlert' + '.txt', 'a')
                 f_ha.write(ha+'\n')
                 f_ha.close()
 
-            if wl.__len__() > symbol.__len__() + 2:
+            if wl.__len__() > wl_empty_len:
                 f_wl = open('C:\\MyProjects\\output\\' + dt.date.today().isoformat() + '_' + index + '_WatchList' + '.txt', 'a')
                 f_wl.write(wl+'\n')
                 f_wl.close()

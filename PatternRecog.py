@@ -19,9 +19,9 @@ wc = wcr.WebCrawler()
 ##symbollist_html = wc.url_open(symbollist_url)
 
 # debug by some specific symbol:
-#indiceslist = ['S&P500_test']
+indiceslist = ['S&P500']
 
-indiceslist = ['S&P500', 'RussellMidCap', 'Russell2000']
+#indiceslist = ['S&P500', 'RussellMidCap', 'Russell2000']
 
 ##read the list of symbol from local file:
 for eachindex in indiceslist:
@@ -38,13 +38,12 @@ for eachindex in indiceslist:
         df.json_digest(wc.url_open(symboldata_url))
         if df.open_price != 0:
             re = rce.RecognitionEngine()
-            re.timespansChecker(eachindex, each, df.open_price, df.close_price, df.high_price, df.low_price)
+            re.timespansChecker(eachindex, each, df.open_price, df.close_price, df.high_price, df.low_price, df.volume[-1])
 
         time.sleep(2)
 
-print('done with patter recognition jobs, start merging today data into excel')
+print('done with patter recognition jobs, start merging data and write it to excel')
 
-mergexl = exl.merge2Excel()
 
 merg_indiceslist = ['RussellMidCap', 'Russell2000']
 # merg_indiceslist = ['S&P500', 'RussellMidCap', 'Russell2000']
@@ -54,11 +53,12 @@ listtype = ['_HighAlert']
 
 for each in merg_indiceslist:
     for lt in listtype:
+        mergexl = exl.merge2Excel()
         mergexl.merge2ExcelWorker(each, lt)
 
 print('all done!!!')
 
-# todo: patter adjust: add a check period for high point: check period: from 1/4 to 3/4
+# todo: add today volumn and today price to lists
 # todo: delete the old files in output folder?
 # todo: make the number of days in excel file configurable, current is 10 days.
 # todo: ip addrs proxy?
