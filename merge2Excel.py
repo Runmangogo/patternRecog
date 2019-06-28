@@ -55,21 +55,33 @@ class merge2Excel:
         # exclude first row (titles)
         if sheet._get_cell(row=1, column=1).value == 'symbol':
             sheet.delete_rows(idx=1, amount=1)
+
+        # has 10 days of data, need to get rid of the first day
+        if self.prior_columns == 12:
+            sheet.delete_columns(idx=3, amount=1)
+
         g = lambda x: x if x is not None else ''
         for row in sheet.rows:
             list_temp = []
             for cell in row:
                 list_temp.append(g(cell.value))
 
-            # has 10 days of data, need to get rid of the first day
-            #
-            # it has to go one if for each iteration,
-            # !!!!!!!!!!!!! not very good, maybe we can improve this in the future !!!!!!!!!!!!!!!!!!
-            if self.prior_columns == 12:
-                list_temp.remove(list_temp[2])
+            # old codes for : has 10 days of data, need to get rid of the first day
+            # if self.prior_columns == 12:
+            #    list_temp.remove(list_temp[2])
 
             # for each row data in the list, convert them to dict
-            self.today_exl[list_temp[0].upper()] = list_temp[1:]
+            # bug fix: only add the symbol with value in any of days -- do not add symbol with None value in all days
+            hasvalue = 1
+            # I dont like codes below, improve it in the future.
+            if self.prior_columns == 12:
+                hasvalue = 0
+                for element in list_temp[2:]:
+                    if element != '':
+                        hasvalue = 1
+                        break
+            if hasvalue == 1:
+                self.today_exl[list_temp[0].upper()] = list_temp[1:]
 
         # debug
         # print('today_exl(before merge):' + str(self.today_exl))
@@ -171,4 +183,6 @@ class merge2Excel:
 
 if __name__ == '__main__':
     mer = merge2Excel()
-    mer.merge2ExcelWorker('Russell2000', '_HighAlert')
+    mer.merge2ExcelWorker('RussellMidCap', '_HighAlert')
+    mer2 = merge2Excel()
+    mer2.merge2ExcelWorker('Russell2000', '_HighAlert')
