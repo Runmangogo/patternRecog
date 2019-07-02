@@ -36,9 +36,10 @@ for eachindex in indiceslist:
         symboldata_url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + each + '?&region=US&lang=en-US&includePrePost=false&interval=1d&range=2y&corsDomain=finance.yahoo.com'
         df = dfy.DataFactory()
         df.json_digest(wc.url_open(symboldata_url))
-        if df.open_price != 0:
-            re = rce.RecognitionEngine()
-            re.timespansChecker(eachindex, each, df.open_price, df.close_price, df.high_price, df.low_price, df.volume[-1])
+        if df.is_excepttion == 0:
+            if df.open_price != 0:
+                re = rce.RecognitionEngine()
+                re.timespansChecker(eachindex, each, df.open_price, df.close_price, df.high_price, df.low_price, df.volume[-1])
 
         time.sleep(2)
 
@@ -58,7 +59,8 @@ for each in merg_indiceslist:
 
 print('all done!!!')
 
-# todo: complete the code for CEO-BUYS -- get the data and check the price
+# todo: complete the code for CEO-BUYS -- get the data and check the price and volumn, and put it on the new list
+# todo: Trade simulation script to simlulate if I bought the symbol, and what is outcome everyday afterward.
 # todo: delete the old files in output folder?
 # todo: make the number of days in excel file configurable, current is 10 days.
 # todo: ip addrs proxy?

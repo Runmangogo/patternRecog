@@ -18,15 +18,24 @@ class merge2Excel:
         #excel_path = root_path + dt.date.today().isoformat() + '_' + index + list_type +  '.xlsx'
         #prior_excel_path = root_path + (dt.date.today()-dt.timedelta(days=1)).isoformat() + '_' + index + list_type +  '.xlsx'
         excel_path = root_path + dt.date.today().isoformat() + list_type + '.xlsx'
-        prior_excel_path = root_path + (dt.date.today()-dt.timedelta(days=1)).isoformat() + list_type +  '.xlsx'
+
+
+
 
 
         sheet_name = index + list_type
 
 
         # check if the file exists
-        if os.path.isfile(prior_excel_path):
-            self.read_excel_xlsx(prior_excel_path, sheet_name)
+
+        # go back 5 days to make sure it can get the prior xlsx (when in between there is weekend, long weekend, holiday, etc,)
+        for prior_day in range(5):
+            prior_excel_path = root_path + (dt.date.today() - dt.timedelta(days=prior_day+1)).isoformat() + list_type +'.xlsx'
+            if os.path.isfile(prior_excel_path):
+                self.read_excel_xlsx(prior_excel_path, sheet_name)
+                break
+
+
 
         if os.path.isfile(list_path) == False :
             print('file not found: ' + list_path)

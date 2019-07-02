@@ -42,6 +42,10 @@ class RecognitionEngine:
         # put this info in the dict with key is startind and value is timerange
         startidx = {}
         # 365 - 10 holidays : avg 21 weekdays per month
+        # 1 month
+        startidx[endidx - 21] = '1'
+        startidx[endidx - 42] = '2'
+        startidx[endidx - 62] = '3'
         # 4 months
         startidx[endidx - 83] = '4'
         # 5 months
