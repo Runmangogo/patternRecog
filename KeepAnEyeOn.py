@@ -15,11 +15,11 @@ class KeepAnEyeOn:
 
     def kaeoWorker(self):
         root_path = 'C:\\MyProjects\\output\\'
-        excel_path = root_path + dt.date.today().isoformat() + '_HighAlert' + '.xlsx'
+        excel_path = root_path + dt.date.today().isoformat() + '.xlsx'
 
 
         for prior_day in range(5):
-            prior_excel_path = root_path + (dt.date.today() - dt.timedelta(days=prior_day+1)).isoformat() + '_HighAlert' +'.xlsx'
+            prior_excel_path = root_path + (dt.date.today() - dt.timedelta(days=prior_day+1)).isoformat() +'.xlsx'
             if os.path.isfile(prior_excel_path):
                 self.readexcel(prior_excel_path)
                 break

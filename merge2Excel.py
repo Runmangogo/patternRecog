@@ -1,5 +1,6 @@
 import openpyxl as xl
 import datetime as dt
+from openpyxl.styles import PatternFill
 import os
 
 class merge2Excel:
@@ -17,7 +18,7 @@ class merge2Excel:
         list_path = root_path + dt.date.today().isoformat() + '_' + index + list_type + '.txt'
         #excel_path = root_path + dt.date.today().isoformat() + '_' + index + list_type +  '.xlsx'
         #prior_excel_path = root_path + (dt.date.today()-dt.timedelta(days=1)).isoformat() + '_' + index + list_type +  '.xlsx'
-        excel_path = root_path + dt.date.today().isoformat() + list_type + '.xlsx'
+        excel_path = root_path + dt.date.today().isoformat() + '.xlsx'
 
         sheet_name = index + list_type
 
@@ -26,7 +27,7 @@ class merge2Excel:
 
         # go back 5 days to make sure it can get the prior xlsx (when in between there is weekend, long weekend, holiday, etc,)
         for prior_day in range(5):
-            prior_excel_path = root_path + (dt.date.today() - dt.timedelta(days=prior_day+1)).isoformat() + list_type +'.xlsx'
+            prior_excel_path = root_path + (dt.date.today() - dt.timedelta(days=prior_day+1)).isoformat() +'.xlsx'
             if os.path.isfile(prior_excel_path):
                 self.read_excel_xlsx(prior_excel_path, sheet_name)
                 break
@@ -172,11 +173,21 @@ class merge2Excel:
             symbol_list.append(each)
         symbol_list.sort()
 
+        # initiate orange colors #FFC125 for cell
+        fill = PatternFill("solid", fgColor="00FFC125")
+
+        # write data to excel
         for each in range(len(symbol_list)):
             sheet.cell(row=each + 2, column=1, value= symbol_list[each])
             #self.today_exl[symbol_list[each]].replace(None, '')
             for lst in range(len(self.today_exl[symbol_list[each]])):
                 sheet.cell(row=each + 2, column=lst + 2, value=str(self.today_exl[symbol_list[each]][lst]))
+
+            # fill the row of cells if the symbol match the pattern I want
+            if self.today_exl[symbol_list[each]][0].casefold().find('>match<') != -1:
+                for lst in range(len(self.today_exl[symbol_list[each]])):
+                    sheet.cell(row=each + 2, column=lst + 2).fill = fill
+
         workbook.save(excel_path)
 
 
