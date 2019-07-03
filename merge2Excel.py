@@ -19,10 +19,6 @@ class merge2Excel:
         #prior_excel_path = root_path + (dt.date.today()-dt.timedelta(days=1)).isoformat() + '_' + index + list_type +  '.xlsx'
         excel_path = root_path + dt.date.today().isoformat() + list_type + '.xlsx'
 
-
-
-
-
         sheet_name = index + list_type
 
 
@@ -182,6 +178,7 @@ class merge2Excel:
             for lst in range(len(self.today_exl[symbol_list[each]])):
                 sheet.cell(row=each + 2, column=lst + 2, value=str(self.today_exl[symbol_list[each]][lst]))
         workbook.save(excel_path)
+
 
 
 
