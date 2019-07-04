@@ -174,19 +174,29 @@ class merge2Excel:
         symbol_list.sort()
 
         # initiate orange colors #FFC125 for cell
-        fill = PatternFill("solid", fgColor="00FFC125")
+        # color link: http://www.114la.com/other/rgb.htm
+        fill_orange = PatternFill("solid", fgColor="00FFC125")
+        fill_blue = PatternFill("solid", fgColor="005CACEE")
 
         # write data to excel
         for each in range(len(symbol_list)):
+            # write down the symbol name
             sheet.cell(row=each + 2, column=1, value= symbol_list[each])
-            #self.today_exl[symbol_list[each]].replace(None, '')
-            for lst in range(len(self.today_exl[symbol_list[each]])):
-                sheet.cell(row=each + 2, column=lst + 2, value=str(self.today_exl[symbol_list[each]][lst]))
 
             # fill the row of cells if the symbol match the pattern I want
             if self.today_exl[symbol_list[each]][0].casefold().find('>match<') != -1:
-                for lst in range(len(self.today_exl[symbol_list[each]])):
-                    sheet.cell(row=each + 2, column=lst + 2).fill = fill
+                for lst in range(len(self.today_exl[symbol_list[each]])+1):
+                    sheet.cell(row=each + 2, column=lst + 1).fill = fill_orange
+
+            # fill the last cells (today's cell) with color(blue) if this symbol is in today's list
+            if self.today_data.get(symbol_list[each]) is not None:
+                sheet.cell(row=each + 2, column=len(self.today_exl[symbol_list[each]])+1).fill = fill_blue
+
+            # self.today_exl[symbol_list[each]].replace(None, '')
+            for lst in range(len(self.today_exl[symbol_list[each]])):
+                sheet.cell(row=each + 2, column=lst + 2, value=str(self.today_exl[symbol_list[each]][lst]))
+
+
 
         workbook.save(excel_path)
 

@@ -46,9 +46,7 @@ class RecognitionEngine:
         startidx[endidx - 21] = '1'
         startidx[endidx - 42] = '2'
         startidx[endidx - 62] = '3'
-        # 4 months
         startidx[endidx - 83] = '4'
-        # 5 months
         startidx[endidx - 104] = '5'
         startidx[endidx - 125] = '6'
         startidx[endidx - 146] = '7'
@@ -57,12 +55,18 @@ class RecognitionEngine:
         startidx[endidx - 209] = '10'
         startidx[endidx - 230] = '11'
         startidx[endidx - 250] = '12'
+        startidx[endidx - 271] = '13'
         startidx[endidx - 292] = '14'
+        startidx[endidx - 213] = '15'
         startidx[endidx - 334] = '16'
+        startidx[endidx - 354] = '17'
         startidx[endidx - 375] = '18'
+        startidx[endidx - 396] = '19'
         startidx[endidx - 417] = '20'
+        startidx[endidx - 438] = '21'
         startidx[endidx - 459] = '22'
-        # 12 months
+        startidx[endidx - 479] = '23'
+        # 24 months
         startidx[0] = '24'
 
         for eachKey in startidx.keys():
