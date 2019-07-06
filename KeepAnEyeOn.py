@@ -12,6 +12,7 @@ class KeepAnEyeOn:
         self.priordata = {}
         self.prior_columns = 0
         self.today_exl = {}
+        self.is_exception = 0
 
     def kaeoWorker(self):
         root_path = 'C:\\MyProjects\\output\\'
@@ -24,36 +25,42 @@ class KeepAnEyeOn:
                 self.readexcel(prior_excel_path)
                 break
 
-
-        self.todaypricefetcher()
-        self.writeexcel(excel_path)
+        if self.is_exception == 0:
+            self.todaypricefetcher()
+            self.writeexcel(excel_path)
 
 
     # read data from existing sheet, and write them into self.priordata
     def readexcel (self, path):
 
         workbook = xl.load_workbook(path)
-        sheet = workbook['KAEO']
-        self.prior_columns = sheet.max_column
 
-        if self.prior_columns == 0:
-            return
+        try:
+            sheet = workbook['KAEO']
+            self.prior_columns = sheet.max_column
 
-        # exclude first row (titles)
-        if sheet._get_cell(row=1, column=1).value == 'symbol':
-            sheet.delete_rows(idx=1, amount=1)
+            if self.prior_columns == 0:
+                return
 
-        # has 10 days of data, need to get rid of the first day
-        if self.prior_columns == 12:
-            sheet.delete_columns(idx=3, amount=1)
+            # exclude first row (titles)
+            if sheet._get_cell(row=1, column=1).value == 'symbol':
+                sheet.delete_rows(idx=1, amount=1)
 
-        # put all data into list, convert None to ''
-        g = lambda x: x if x is not None else ''
-        for row in sheet.rows:
-            list_temp = []
-            for cell in row:
-                list_temp.append(g(cell.value))
-            self.today_exl[list_temp[0].upper()] = list_temp[1:]
+            # has 10 days of data, need to get rid of the first day
+            if self.prior_columns == 12:
+                sheet.delete_columns(idx=3, amount=1)
+
+            # put all data into list, convert None to ''
+            g = lambda x: x if x is not None else ''
+            for row in sheet.rows:
+                list_temp = []
+                for cell in row:
+                    list_temp.append(g(cell.value))
+                self.today_exl[list_temp[0].upper()] = list_temp[1:]
+        except Exception as e:
+            print('readexcel: exception when reading the excel')
+            print(e)
+            self.is_exception =1
 
 
 

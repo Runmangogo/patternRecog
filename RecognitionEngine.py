@@ -28,13 +28,17 @@ class RecognitionEngine:
 
         # if there is element with 'null' value in lists, we need to remove it from them.
         if open_price.count(None) > 0:
-            print('found None value in the open_price')
-            wl = wl + '*'
-            ha = ha + '*'
-            open_price = list(filter(lambda x: x is not None, open_price))
-            close_price = list(filter(lambda x: x is not None, close_price))
-            high_price = list(filter(lambda x: x is not None, high_price))
-            low_price = list(filter(lambda x: x is not None, low_price))
+            if high_price[-1] is None:
+                print('found None value in today high_price, skip this symbol')
+                return
+            else:
+                print('found None value in the open_price')
+                wl = wl + '*'
+                ha = ha + '*'
+                open_price = list(filter(lambda x: x is not None, open_price))
+                close_price = list(filter(lambda x: x is not None, close_price))
+                high_price = list(filter(lambda x: x is not None, high_price))
+                low_price = list(filter(lambda x: x is not None, low_price))
 
         wl_empty_len = wl.__len__()
         ha_empty_len = ha.__len__()
